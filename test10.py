@@ -6,7 +6,7 @@ from mcstatus import JavaServer
 
 load_dotenv()  # betölti a .env fájlt
 
-TOKEN = os.getenv("MTM4Mzc3OTE3NzM0MTEyODcxNA.GjHSiO.fNg-ATAG-EiHHP1YFv5g7xqSqKpesWdrgm44Xk")
+TOKEN = os.getenv("MTM4Mzc3OTE3NzM0MTEyODcxNA.G-9_Eo.BfbSYcqWoGQxzMo_gr6kDTj8NjjwOp1YDK3TRc")
 GUILD_ID = 1368975077470765177
 VOICE_CHANNEL_ID = 1391699395363340380
 MINECRAFT_IP = "play.woodcraft.hu"
