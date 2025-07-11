@@ -1,11 +1,15 @@
+import os
+from dotenv import load_dotenv
 import discord
 from discord.ext import commands, tasks
 from mcstatus import JavaServer
 
-TOKEN = "MTM4Mzc3OTE3NzM0MTEyODcxNA.Gngh6K.pvu6JR-OK-WWufemBrVizmqzFVB_pKu0N2VoA0"
+load_dotenv()  # betölti a .env fájlt
+
+TOKEN = os.getenv("MTM4Mzc3OTE3NzM0MTEyODcxNA.GjHSiO.fNg-ATAG-EiHHP1YFv5g7xqSqKpesWdrgm44Xk")
 GUILD_ID = 1368975077470765177
 VOICE_CHANNEL_ID = 1391699395363340380
-MINECRAFT_IP = "play.woodcraft.hu"  # például: play.hypixel.net
+MINECRAFT_IP = "play.woodcraft.hu"
 MINECRAFT_PORT = 25565
 
 intents = discord.Intents.default()
