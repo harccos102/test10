@@ -1,44 +1,35 @@
 import discord
-from discord.ext import tasks, commands
-from mcstatus import JavaServer
+from discord.ext import commands, tasks
+from mcstatus import MinecraftServer
 
-TOKEN = 'MTM4Mzc3OTE3NzM0MTEyODcxNA.G-wStK.RuNyvDVT4Jq6HlpllBDgOejWCRk356RMv-2QUE'
-VOICE_CHANNEL_ID = 1391699395363340380  # Írd ide a saját hangcsatorna ID-t
-MC_SERVER_IP = "play.woodcraft.hu:25565"  # Minecraft szerver címe
+TOKEN = "MTM4Mzc3OTE3NzM0MTEyODcxNA.Gngh6K.pvu6JR-OK-WWufemBrVizmqzFVB_pKu0N2VoA0"
+GUILD_ID = 1368975077470765177  # szerver (guild) ID
+VOICE_CHANNEL_ID = 1391699395363340380  # hangcsatorna ID
+MINECRAFT_IP = "play.woodcraft.hu"  # pl. "play.hypixel.net"
+MINECRAFT_PORT = 25565
 
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)
-last_name = None  # Ezzel figyeljük, hogy változott-e a név
 
 @bot.event
 async def on_ready():
-    print(f"✅ Bejelentkezve mint: {bot.user}")
-    update_channel_name.start()
+    print(f"A bot bejelentkezett mint: {bot.user}")
+    update_voice_channel.start()
 
-@tasks.loop(minutes=5)
-async def update_channel_name():
-    global last_name
+@tasks.loop(seconds=60)  # frissítés percenként
+async def update_voice_channel():
     try:
-        server = JavaServer.lookup(MC_SERVER_IP)
-        status = await server.async_status()
+        server = MinecraftServer.lookup(f"{MINECRAFT_IP}:{MINECRAFT_PORT}")
+        status = server.status()
         player_count = status.players.online
-        new_name = f"wood player ({player_count})"
-    except Exception as e:
-        print(f"❌ Hiba történt a szerver lekérésénél: {e}")
-        new_name = "🌐 Szerver nem elérhető"
 
-    if new_name != last_name:
-        channel = bot.get_channel(VOICE_CHANNEL_ID)
-        if channel and isinstance(channel, discord.VoiceChannel):
-            try:
-                await channel.edit(name=new_name)
-                print(f"✅ Csatorna frissítve: {new_name}")
-                last_name = new_name
-            except Exception as e:
-                print(f"❌ Nem sikerült módosítani a csatornát: {e}")
-        else:
-            print("❌ A megadott csatorna nem hangcsatorna vagy nem található.")
-    else:
-        print("ℹ️ Nincs változás, nem frissítjük a nevet.")
+        # Kapcsold le a csatornát és nevezd át
+        guild = bot.get_guild(GUILD_ID)
+        channel = guild.get_channel(VOICE_CHANNEL_ID)
+        if channel:
+            await channel.edit(name=f"🎮 Játékosok: {player_count}")
+            print(f"[Frissítve] 🎮 Játékosok: {player_count}")
+    except Exception as e:
+        print(f"Hiba: {e}")
 
 bot.run(TOKEN)
